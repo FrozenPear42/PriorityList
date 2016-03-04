@@ -20,6 +20,7 @@ INCLUDES := $(wildcard $(INCDIR)/*.hpp) $(wildcard $(INCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(BINDIR)/%.o)
 
 $(TARGET): $(OBJECTS)
+	mkdir $(BINDIR)
 	@$(CXX) -o $@ $(LFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
