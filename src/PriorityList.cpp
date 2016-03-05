@@ -4,6 +4,7 @@
  *
  */
 #include <unordered_set>
+#include <iostream>
 #include "PriorityList.hpp"
 
 PriorityList::PriorityList(const PriorityList& pList)
@@ -34,7 +35,7 @@ long& PriorityList::operator[](int pIdx) {
         node = node->next;
     }
     node->ref_cnt++;
-    //TODO: Sort
+    sortNearNode(node);
     return node->data;
 }
 
@@ -43,6 +44,7 @@ int PriorityList::find(long pVal) {
     for(auto it = begin(); it != end(); it++, i++)
         if(*it == pVal) {
             it->ref_cnt++;
+            sortNearNode(it.operator->());
             return i;
         }
     return -1;
@@ -197,6 +199,35 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
     mSize++;
  }
 
+void PriorityList::sortNearNode(PriorityList::Node *pNode) {
+    Node* ptr = pNode->prev;
+    if(pNode == nullptr || ptr == nullptr)
+        return;
+
+    while(ptr != nullptr && ptr->ref_cnt <= pNode->ref_cnt)
+        ptr = ptr->prev;
+
+    if(ptr == pNode->prev) // No need to sort
+        return;
+
+    if(ptr == nullptr) { //have to move pNode to the begining of the list
+        pNode->next->prev = pNode->prev;
+        pNode->prev->next = pNode->next;
+        pNode->next = mHead;
+        pNode->prev = nullptr;
+        mHead->prev = pNode;
+        mHead = pNode;
+    } else { //have to move pNode right after ptr
+        pNode->next->prev = pNode->prev;
+        pNode->prev->next = pNode->next;
+        pNode->next = ptr->next;
+        pNode->prev = ptr;
+        ptr->next->prev = pNode;
+        ptr->next = pNode;
+    }
+
+}
+
 PriorityList::Node* PriorityList::removeElement(PriorityList::Node* pNode) {
     if(pNode == nullptr)
         return nullptr;
@@ -226,8 +257,7 @@ std::ostream& operator<<(std::ostream& out, PriorityList& mList)
 {
     for(auto it = mList.cBegin(); it != mList.cEnd(); it++)
     {
-        //FIXME: ERRHERE
-        out << it->data << "(" << it->ref_cnt << ")\n";
+        out << it->data << "(" << it->ref_cnt << "), ";
     }
     return out;
 }

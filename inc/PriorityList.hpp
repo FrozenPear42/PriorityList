@@ -83,5 +83,6 @@ class PriorityList {
       void pushFrontRef(long pData, unsigned int pRefCnt);
       void pushBackRef(long pData, unsigned int pRefCnt);
 
+      void sortNearNode(Node* pNode);
       Node* removeElement(Node* pNode);
 };
