@@ -20,12 +20,11 @@ INCLUDES := $(wildcard $(INCDIR)/*.hpp) $(wildcard $(INCDIR)/*.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.cpp=$(BINDIR)/%.o)
 
 $(TARGET): $(OBJECTS)
-	mkdir $(BINDIR)
 	@$(CXX) -o $@ $(LFLAGS) $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(BINDIR)/%.o : $(SRCDIR)/%.cpp
-	@$(CXX) $(CFLAGS) -I$(INCDIR) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
 
 .PHONEY: clean
 clean:
