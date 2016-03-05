@@ -21,7 +21,7 @@ int main(int argc, char **argv)
   //list.pushFront(271);
   cout << list.length() << " " << list[0] << endl;
   cout << list << endl;
-  cout << list.length() << " " << list[1] << endl;
+  cout << list.length() << " " << list[2] << endl;
   cout << list << endl;
 
 

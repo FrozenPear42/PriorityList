@@ -28,15 +28,13 @@ long PriorityList::getByIdx(int pIdx) {
 long& PriorityList::operator[](int pIdx) {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
-    int i = 0;
-    Node* node = mHead;
-    while(i != pIdx) {
-        i++;
-        node = node->next;
-    }
-    node->ref_cnt++;
-    sortNearNode(node);
-    return node->data;
+
+    auto it = begin();
+    for(int i = 0; i != pIdx; it++, i++);
+
+    it->ref_cnt++;
+    sortNearNode(it.operator->());
+    return *it;
 }
 
 int PriorityList::find(long pVal) {
@@ -53,20 +51,17 @@ int PriorityList::find(long pVal) {
 void PriorityList::removeByIdx(int pIdx) {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
-    int i = 0;
-    Node* node = mHead;
-    while(i++ != pIdx)
-        node = node->next;
-    removeElement(node);
+    auto it = begin();
+    for(int i = 0; i != pIdx; it++, i++);
+    removeElement(it.operator->());
 
 }
 
 void PriorityList::removeOneByValue(long pVal) {
-    Node* node = mHead;
-    while(node != nullptr && node->data == pVal )
-        node = node->next;
-    if(node != nullptr && node->data == pVal)
-        removeElement(node);
+    auto it = begin()
+    for(; it != end() || *it == pVal; it++);
+    if(it != end())
+        removeElement(it.operator->());
 }
 
 void PriorityList::removeAllByValue(long pVal) {
