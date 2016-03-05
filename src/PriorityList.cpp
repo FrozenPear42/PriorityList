@@ -11,6 +11,14 @@ PriorityList::PriorityList(const PriorityList& pList)
     operator+=(pList);
 }
 
+void PriorityList::pushBack(long pVal) {
+    pushBackRef(pVal, 0);
+}
+
+void PriorityList::pushFront(long pVal) {
+    pushFrontRef(pVal, 0);
+}
+
 void PriorityList::removeByIdx(int pIdx) {
 
 }
@@ -28,23 +36,23 @@ void PriorityList::removeAll() {
 }
 
 PriorityList::iterator PriorityList::begin() const {
-  return PriorityList::iterator(head);
+  return PriorityList::iterator(mHead);
 }
 
 PriorityList::iterator PriorityList::end() const {
-  return PriorityList::iterator(tail->next);
+  return PriorityList::iterator(mTail->next);
 }
 
 PriorityList::constIterator PriorityList::cBegin() const {
-  return PriorityList::constIterator(head);
+  return PriorityList::constIterator(mHead);
 }
 
 PriorityList::constIterator PriorityList::cEnd() const {
-  return PriorityList::constIterator(tail->next);
+  return PriorityList::constIterator(mTail->next);
 }
 
 int PriorityList::length() const {
-  return this->size;
+  return this->mSize;
 }
 
 PriorityList PriorityList::operator+(const PriorityList& rhs) const {
@@ -55,7 +63,7 @@ PriorityList PriorityList::operator+(const PriorityList& rhs) const {
 
 PriorityList& PriorityList::operator+=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++) {
-            //TODO: Add on the end
+            pushBackRef(it->data, it->ref_cnt);
     }
     return *this;
 }
@@ -79,7 +87,7 @@ PriorityList& PriorityList::operator=(const PriorityList& rhs) {
 }
 
 bool PriorityList::operator==(const PriorityList& rhs) const {
-  if(size != rhs.size)
+  if(mSize != rhs.length())
     return false;
 
     auto li = cBegin();
@@ -90,4 +98,31 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
     if(li == cEnd() && ri == rhs.cEnd())
       return true;
     return false;
+ }
+
+ void PriorityList::pushFirstRef(long pData, unsigned int pRefCnt) {
+     Node* node = new Node(pData, pRefCnt);
+     mHead = node;
+     mTail = node;
+     mSize++;
+ }
+
+ void PriorityList::pushFrontRef(long pData, unsigned int pRefCnt) {
+     if(mSize == 0)
+        return pushFirstRef(pData, pRefCnt);
+    Node* node = new Node(pData, pRefCnt);
+    node->next = mHead;
+    mHead->prev = node;
+    mHead = node;
+    mSize++;
+ }
+
+ void PriorityList::pushBackRef(long pData, unsigned int pRefCnt) {
+     if(mSize == 0)
+        return pushFirstRef(pData, pRefCnt);
+    Node* node = new Node(pData, pRefCnt);
+    node->prev = mTail;
+    mTail->next = node;
+    mTail = node;
+    mSize++;
  }

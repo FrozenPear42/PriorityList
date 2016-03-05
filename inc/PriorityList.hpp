@@ -15,10 +15,11 @@ class PriorityList {
         unsigned int ref_cnt;
         Node* next;
         Node* prev;
-        Node(const long d): data(d), ref_cnt(0), next(nullptr), prev(nullptr) {}
+        Node(long d): data(d), ref_cnt(0), next(nullptr), prev(nullptr) {}
+        Node(long d, unsigned int cnt): data(d), ref_cnt(cnt), next(nullptr), prev(nullptr) {}
       };
 
-      template <class Type>
+      template <class Type, class NType>
       class ListIterator : public std::iterator<std::bidirectional_iterator_tag, long, std::ptrdiff_t, Type*, Type&> {
       public:
         ListIterator(Node* pNode): node(pNode) {}
@@ -29,15 +30,16 @@ class PriorityList {
         ListIterator operator--(int) {ListIterator tmp(*this); operator--(); return tmp;}
         bool operator==(const ListIterator& rhs) {return node == rhs.node;}
         bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
-        long& operator*() const {return node->data;}
+        Type& operator*() const {return node->data;}
+        NType* operator->() const { return node;}
       private:
         Node* node;
       };
 
-      typedef ListIterator<long> iterator;
-      typedef ListIterator<const long> constIterator;
+      typedef ListIterator<long, Node> iterator;
+      typedef ListIterator<const long, const Node> constIterator;
 
-      PriorityList(): head(nullptr), tail(nullptr), size(0) {}
+      PriorityList(): mHead(nullptr), mTail(nullptr), mSize(0) {}
       PriorityList(const PriorityList& pList);
 
       void pushFront(long pVal);
@@ -71,7 +73,12 @@ class PriorityList {
       bool operator==(const PriorityList& rhs) const;
 
   private:
-      Node* head;
-      Node* tail;
-      int size;
+      Node* mHead;
+      Node* mTail;
+      int mSize;
+
+      void pushFirstRef(long pData, unsigned int pRefCnt);
+      void pushFrontRef(long pData, unsigned int pRefCnt);
+      void pushBackRef(long pData, unsigned int pRefCnt);
+
 };
