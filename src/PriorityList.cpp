@@ -19,20 +19,48 @@ void PriorityList::pushFront(long pVal) {
     pushFrontRef(pVal, 0);
 }
 
-void PriorityList::removeByIdx(int pIdx) {
+long PriorityList::getByIdx(int pIdx) {
+    return operator[](pIdx);
+}
 
+long& PriorityList::operator[](int pIdx) {
+    if(pIdx < 0 || pIdx >= mSize)
+        throw std::out_of_range("List index out of range");
+    int i = 0;
+    Node* node = mHead;
+    while(i != pIdx) {
+        i++;
+        node = node->next;
+    }
+    node->ref_cnt++;
+
+    return node->data;
+}
+
+int PriorityList::find(long pVal) {
+    int i = 0;
+    for(auto it = begin(); it != end(); it++, i++)
+        if(*it == pVal) {
+            it->ref_cnt++;
+            return i;
+        }
+    return -1;
+}
+
+void PriorityList::removeByIdx(int pIdx) {
+//TODO
 }
 
 void PriorityList::removeOneByValue(long pVal) {
-
+//TODO
 }
 
 void PriorityList:: removeAllByValue(long pVal) {
-
+//TODO
 }
 
 void PriorityList::removeAll() {
-
+//TODO
 }
 
 PriorityList::iterator PriorityList::begin() const {

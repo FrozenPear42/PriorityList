@@ -54,9 +54,9 @@ class PriorityList {
       void removeAll();
       void removeDuplicates();
 
-      long getById(int pIdx) const;
-      long& operator[](int pIdx) const;
-      int find(long pVal) const;
+      long getByIdx(int pIdx);
+      long& operator[](int pIdx);
+      int find(long pVal);
 
       PriorityList::iterator begin() const;
       PriorityList::iterator end() const;
