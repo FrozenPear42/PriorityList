@@ -72,6 +72,8 @@ class PriorityList {
       PriorityList& operator=(const PriorityList& rhs);
       bool operator==(const PriorityList& rhs) const;
 
+      friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
+
   private:
       Node* mHead;
       Node* mTail;
@@ -81,4 +83,5 @@ class PriorityList {
       void pushFrontRef(long pData, unsigned int pRefCnt);
       void pushBackRef(long pData, unsigned int pRefCnt);
 
+      Node* removeElement(Node* pNode);
 };
