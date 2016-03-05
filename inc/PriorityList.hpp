@@ -44,8 +44,8 @@ class PriorityList {
 
       void pushFront(long pVal);
       void pushBack(long pVal);
-      void insertBeforeIdx(long pVal, int pIdx);
-      void insertAfterIdx(long pVal, int pIdx);
+      void insertBeforeIdx(long pVal, int pIdx);//TODO
+      void insertAfterIdx(long pVal, int pIdx);//TODO
 
       void removeByIdx(int pIdx);
       void removeOneByValue(long pVal);

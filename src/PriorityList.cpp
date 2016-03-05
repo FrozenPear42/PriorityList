@@ -7,9 +7,8 @@
 #include <iostream>
 #include "PriorityList.hpp"
 
-PriorityList::PriorityList(const PriorityList& pList)
+PriorityList::PriorityList(const PriorityList& pList) : PriorityList()
 {
-    PriorityList();
     operator+=(pList);
 }
 
@@ -58,8 +57,8 @@ void PriorityList::removeByIdx(int pIdx) {
 }
 
 void PriorityList::removeOneByValue(long pVal) {
-    auto it = begin()
-    for(; it != end() || *it == pVal; it++);
+    auto it = begin();
+    for(; it != end() && *it != pVal; it++);
     if(it != end())
         removeElement(it.operator->());
 }
@@ -143,7 +142,7 @@ PriorityList PriorityList::operator-(const PriorityList& rhs) const {
 
 PriorityList PriorityList::operator-=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++)
-        this->removeOneByValue(*it);
+        removeOneByValue(*it);
     return *this;
 }
 
