@@ -5,25 +5,27 @@
  */
 #include "PriorityList.hpp"
 
-
-int PriorityList::length() {
-  return this->size;
+PriorityList::PriorityList(const PriorityList& pList)
+{
+    PriorityList();
+    operator+=(pList);
 }
 
-bool PriorityList::operator==(const PriorityList& rhs) const {
-  if(size != rhs.size)
-    return false;
+void PriorityList::removeByIdx(int pIdx) {
 
-    auto li = cBegin();
-    auto ri = rhs.cBegin();
-    for(;li != cEnd() && ri != rhs.cEnd(); li++, ri++)
-          if(*li != *ri)
-            return false;
-    if(li == cEnd() && ri == rhs.cEnd())
-      return true;
-    return false;
- }
+}
 
+void PriorityList::removeOneByValue(long pVal) {
+
+}
+
+void PriorityList:: removeAllByValue(long pVal) {
+
+}
+
+void PriorityList::removeAll() {
+
+}
 
 PriorityList::iterator PriorityList::begin() const {
   return PriorityList::iterator(head);
@@ -40,3 +42,52 @@ PriorityList::constIterator PriorityList::cBegin() const {
 PriorityList::constIterator PriorityList::cEnd() const {
   return PriorityList::constIterator(tail->next);
 }
+
+int PriorityList::length() const {
+  return this->size;
+}
+
+PriorityList PriorityList::operator+(const PriorityList& rhs) const {
+    PriorityList res(*this);
+    res.operator+=(rhs);
+    return res;
+}
+
+PriorityList& PriorityList::operator+=(const PriorityList& rhs) {
+    for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++) {
+            //TODO: Add on the end
+    }
+    return *this;
+}
+
+PriorityList PriorityList::operator-(const PriorityList& rhs) const {
+    PriorityList res(*this);
+    res.operator-=(rhs);
+    return res;
+}
+
+PriorityList PriorityList::operator-=(const PriorityList& rhs) {
+    for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++)
+        this->removeOneByValue(*it);
+    return *this;
+}
+
+PriorityList& PriorityList::operator=(const PriorityList& rhs) {
+    this->removeAll();
+    this->operator+=(rhs);
+    return *this;
+}
+
+bool PriorityList::operator==(const PriorityList& rhs) const {
+  if(size != rhs.size)
+    return false;
+
+    auto li = cBegin();
+    auto ri = rhs.cBegin();
+    for(;li != cEnd() && ri != rhs.cEnd(); li++, ri++)
+          if(*li != *ri)
+            return false;
+    if(li == cEnd() && ri == rhs.cEnd())
+      return true;
+    return false;
+ }

@@ -24,6 +24,7 @@ $(TARGET): $(OBJECTS)
 	@echo "Linking complete!"
 
 $(OBJECTS): $(BINDIR)/%.o : $(SRCDIR)/%.cpp
+	@mkdir -p $(BINDIR)
 	@$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
 
 .PHONEY: clean

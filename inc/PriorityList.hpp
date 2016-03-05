@@ -8,6 +8,7 @@
 
 class PriorityList {
   public:
+
       class Node {
       public:
         long data;
@@ -36,34 +37,37 @@ class PriorityList {
       typedef ListIterator<long> iterator;
       typedef ListIterator<const long> constIterator;
 
-
       PriorityList(): head(nullptr), tail(nullptr), size(0) {}
       PriorityList(const PriorityList& pList);
 
       void pushFront(long pVal);
       void pushBack(long pVal);
-      void insertBefore(long pVal, int pIdx);
-      void insertAfter(long pVal);
+      void insertBeforeIdx(long pVal, int pIdx);
+      void insertAfterIdx(long pVal, int pIdx);
 
-      void removeById(int pIdx);
-      void removeByValue(long pVal);
+      void removeByIdx(int pIdx);
+      void removeOneByValue(long pVal);
+      void removeAllByValue(long pVal);
       void removeByRange(long pLVal,long pRVal);
+      void removeAll();
       void removeDuplicates();
 
-      long getById(int pIdx);
-      long& operator[](int pIdx);
-      int find(long pVal);
+      long getById(int pIdx) const;
+      long& operator[](int pIdx) const;
+      int find(long pVal) const;
 
       PriorityList::iterator begin() const;
       PriorityList::iterator end() const;
-
       PriorityList::constIterator cBegin() const;
       PriorityList::constIterator cEnd() const;
-      int length();
+
+      int length() const;
 
       PriorityList operator+(const PriorityList& rhs) const;
+      PriorityList& operator +=(const PriorityList& rhs);
       PriorityList operator-(const PriorityList& rhs) const;
-      PriorityList& operator=(const PriorityList& rhs) const;
+      PriorityList operator-=(const PriorityList& rhs);
+      PriorityList& operator=(const PriorityList& rhs);
       bool operator==(const PriorityList& rhs) const;
 
   private:
