@@ -13,26 +13,25 @@
 #define COLOR_BLUE "\x1B[34m"
 #define COLOR_RESET "\x1B[0m"
 
-
 #define assert(expr) try{ \
 if(!(expr)){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << "\n";; return false;} \
-else {self.out << "[" COLOR_GREEN "OK" COLOR_RESET "]   " #expr << "\n";} \
+else {self.out << "  [" COLOR_GREEN "OK" COLOR_RESET "] " #expr << "\n";} \
 }catch(...){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << " EXCEPTION" << "\n"; return false;}
 
-#define eval(expr) self.out <<"[" COLOR_YELLOW "EXP" COLOR_RESET "]  " #expr "\n"; expr;
+#define eval(expr) self.out <<"[" COLOR_YELLOW "EVAL" COLOR_RESET "] " #expr "\n"; expr;
 
-#define log(comment, data) self.out << "[" COLOR_BLUE "LOG" COLOR_RESET "]  " << comment << ": " << data << "\n";
-#define log_obj(obj) self.out << "[" COLOR_BLUE "LOG" COLOR_RESET "]  " << #obj ": " << obj << "\n";
+#define log(comment, data) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << comment << ": " << data << "\n";
+#define log_obj(obj) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << #obj ": " << obj << "\n";
 
 class Test {
 public:
     bool run() {
-        out << "Running test " << mName << ":\n";
+        out << "Running test: " << mName << "\n";
         bool res = mExpression(*this);
         if(res)
-        out << COLOR_GREEN "Success!\n" COLOR_RESET;
+            out << COLOR_GREEN "Success!\n" COLOR_RESET;
         else
-        out << COLOR_RED "Fail!\n" COLOR_RESET;
+            out << COLOR_RED "Fail!\n" COLOR_RESET;
         out << "\n";
         return res;
     };

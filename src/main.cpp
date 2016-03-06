@@ -19,6 +19,15 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("compare", [](Test& self){
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2 = {5, 4, 3, 2, 1};
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 == list2);
+        return true;
+    }));
+
     tests.push_back(Test("length", [](Test& self){
         PriorityList list = {-15555, 0, 1222};
         log_obj(list);
@@ -65,6 +74,44 @@ int main(int argc, const char **argv)
         assert(list.length() == 7);
         return true;
     }));
+
+    tests.push_back(Test("list sum", [](Test& self){
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2 = {6, 7, 8, 9, 10};
+        PriorityList list3;
+        log_obj(list1);
+        log_obj(list2);
+        log_obj(list3);
+        eval(list3 = list1 + list2);
+        log_obj(list1);
+        log_obj(list2);
+        log_obj(list3);
+        assert(list3.length() == 10);
+        return true;
+    }));
+
+    tests.push_back(Test("list subtract", [](Test& self){
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2 = {1, 5, 6, 7};
+        PriorityList list3;
+        log_obj(list1);
+        log_obj(list2);
+        log_obj(list3);
+        eval(list3 = list1 - list2);
+        log_obj(list1);
+        log_obj(list2);
+        log_obj(list3);
+        assert(list3.length() == 3);
+        eval(list3 = list2 - list1);
+        log_obj(list1);
+        log_obj(list2);
+        log_obj(list3);
+        assert(list3.length() == 2);
+
+        return true;
+    }));
+
+
 
     for(Test& test : tests)
         test.run();
