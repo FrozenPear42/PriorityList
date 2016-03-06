@@ -101,6 +101,16 @@ void PriorityList::removeDuplicates() {
     }
 }
 
+PriorityList& PriorityList::operator+=(const long pVal) {
+    pushBack(pVal);
+    return (*this);
+}
+
+PriorityList& PriorityList::operator-=(const long pVal) {
+    removeOneByValue(pVal);
+    return (*this);
+}
+
 PriorityList::iterator PriorityList::begin() const {
   return PriorityList::iterator(mHead);
 }

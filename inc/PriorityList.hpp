@@ -29,6 +29,9 @@ class PriorityList {
       void removeAll();
       void removeDuplicates();
 
+      PriorityList& operator+=(const long pVal);
+      PriorityList& operator-=(const long pVal);
+
       long getByIdx(int pIdx);
       long& operator[](int pIdx);
       int find(long pVal);

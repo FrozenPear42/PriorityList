@@ -19,6 +19,31 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("self sorting", [](Test& self){
+        PriorityList list = {1, 2, 3, 4, 5};
+        log_obj(list.find(4));
+        assert(list.find(4) == 0);
+        log_obj(list.find(2));
+        log_obj(list.find(2));
+        assert(list.find(2) == 0);
+        return true;
+    }));
+
+
+    tests.push_back(Test("add element", [](Test& self){
+        PriorityList list;
+        log_obj(list);
+        eval(list += 111);
+        eval(list += 123);
+        eval(list += 111);
+        log_obj(list);
+        assert(list.length() == 3);
+        eval(list -= 111);
+        log_obj(list);
+        assert(list.length() == 2);
+        return true;
+    }));
+
     tests.push_back(Test("compare", [](Test& self){
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2 = {5, 4, 3, 2, 1};

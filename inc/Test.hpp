@@ -18,7 +18,7 @@ if(!(expr)){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << "\n";; re
 else {self.out << "  [" COLOR_GREEN "OK" COLOR_RESET "] " #expr << "\n";} \
 }catch(...){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << " EXCEPTION" << "\n"; return false;}
 
-#define eval(expr) self.out <<"[" COLOR_YELLOW "EVAL" COLOR_RESET "] " #expr "\n"; expr;
+#define eval(expr) expr; self.out <<"[" COLOR_YELLOW "EVAL" COLOR_RESET "] " #expr "\n";
 
 #define log(comment, data) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << comment << ": " << data << "\n";
 #define log_obj(obj) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << #obj ": " << obj << "\n";
