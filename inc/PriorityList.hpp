@@ -43,6 +43,7 @@ class PriorityList {
 
       PriorityList(): mHead(nullptr), mTail(nullptr), mSize(0) {}
       PriorityList(const PriorityList& pList);
+      PriorityList(std::initializer_list<long> pList);
 
       void pushFront(long pVal);
       void pushBack(long pVal);

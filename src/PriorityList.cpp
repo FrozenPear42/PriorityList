@@ -7,9 +7,13 @@
 #include <iostream>
 #include "PriorityList.hpp"
 
-PriorityList::PriorityList(const PriorityList& pList) : PriorityList()
-{
+PriorityList::PriorityList(const PriorityList& pList) : PriorityList() {
     operator+=(pList);
+}
+
+PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
+    for(auto it = pList.begin();it != pList.end(); it++)
+        pushBackRef(*it, 0);
 }
 
 void PriorityList::pushBack(long pVal) {
