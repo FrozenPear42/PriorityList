@@ -199,7 +199,7 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
 
 void PriorityList::sortNearNode(PriorityList::Node *pNode) {
     Node* ptr = pNode->prev;
-    if(pNode == nullptr || ptr == nullptr)
+    if(pNode == nullptr || ptr == nullptr) //if pNode is at the beggingng of the list
         return;
 
     while(ptr != nullptr && ptr->ref_cnt <= pNode->ref_cnt)
@@ -208,16 +208,19 @@ void PriorityList::sortNearNode(PriorityList::Node *pNode) {
     if(ptr == pNode->prev) // No need to sort
         return;
 
-    if(ptr == nullptr) { //have to move pNode to the begining of the list
+    if(pNode->next != nullptr){
         pNode->next->prev = pNode->prev;
         pNode->prev->next = pNode->next;
+    } else {
+        pNode->prev->next = nullptr;
+        mTail = pNode->prev;
+    }
+    if(ptr == nullptr) { //have to move pNode to the begining of the list
         pNode->next = mHead;
         pNode->prev = nullptr;
         mHead->prev = pNode;
         mHead = pNode;
     } else { //have to move pNode right after ptr
-        pNode->next->prev = pNode->prev;
-        pNode->prev->next = pNode->next;
         pNode->next = ptr->next;
         pNode->prev = ptr;
         ptr->next->prev = pNode;
