@@ -8,36 +8,8 @@
 
 class PriorityList {
   public:
-      class Node {
-
-      public:
-        long data;
-        unsigned int ref_cnt;
-        Node* next;
-        Node* prev;
-        Node(long d): data(d), ref_cnt(0), next(nullptr), prev(nullptr) {}
-        Node(long d, unsigned int cnt): data(d), ref_cnt(cnt), next(nullptr), prev(nullptr) {}
-      };
-
-      template <class Type, class NType>
-      class ListIterator : public std::iterator<std::bidirectional_iterator_tag, long, std::ptrdiff_t, Type*, Type&> {
-          friend class PriorityList;
-          friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
-      public:
-        ListIterator(Node* pNode): node(pNode) {}
-        /* TODO: Overflow check */
-        ListIterator& operator++() {node = node->next; return *this;}
-        ListIterator operator++(int) {ListIterator tmp(*this); operator++(); return tmp;}
-        ListIterator& operator--() {node = node->prev; return *this;}
-        ListIterator operator--(int) {ListIterator tmp(*this); operator--(); return tmp;}
-        bool operator==(const ListIterator& rhs) {return node == rhs.node;}
-        bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
-        Type& operator*() const {return node->data;}
-      private:
-        Node* node;
-        NType* operator->() const { return node;}
-      };
-
+      class Node;
+      template <class Type, class NType> class ListIterator;
       typedef ListIterator<long, Node> iterator;
       typedef ListIterator<const long, const Node> constIterator;
 
@@ -88,4 +60,42 @@ class PriorityList {
 
       void sortNearNode(Node* pNode);
       Node* removeElement(Node* pNode);
+  public:
+      class Node {
+      public:
+          long data;
+          unsigned int ref_cnt;
+          Node* next;
+          Node* prev;
+          Node(long d): data(d), ref_cnt(0), next(nullptr), prev(nullptr) {}
+          Node(long d, unsigned int cnt): data(d), ref_cnt(cnt), next(nullptr), prev(nullptr) {}
+      };
+
+      template <class Type, class NType>
+      class ListIterator : public std::iterator<std::bidirectional_iterator_tag, long, std::ptrdiff_t, Type*, Type&> {
+          friend class PriorityList;
+          friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
+      public:
+          ListIterator(Node* pNode): node(pNode) {}
+          ListIterator& operator++() {
+              if(node == nullptr)
+              throw std::out_of_range("Iterator out of range");
+              node = node->next;
+              return *this;
+          }
+          ListIterator& operator--() {
+              if(node == nullptr)
+              throw std::out_of_range("Iterator out of range");
+              node = node->prev;
+              return *this;
+          }
+          ListIterator operator++(int) {ListIterator tmp(*this); operator++(); return tmp;}
+          ListIterator operator--(int) {ListIterator tmp(*this); operator--(); return tmp;}
+          bool operator==(const ListIterator& rhs) {return node == rhs.node;}
+          bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
+          Type& operator*() const {return node->data;}
+      private:
+          Node* node;
+          NType* operator->() const { return node;}
+      };
 };
