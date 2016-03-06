@@ -7,12 +7,22 @@
 #include <functional>
 #include <iostream>
 
-#define assert(expr) try{ \
-if(!(expr)){self.out << "Test " << self.mName << " failed at: " #expr "\n"; return false;} \
-else {self.out << "[OK] " #expr << "\n";} \
-}catch(...){self.out << "Test " << self.mName << " failed at: " #expr "\n" << "Exception: " << "happened!" << "\n"; return false;}
+#define COLOR_RED "\x1B[31m"
+#define COLOR_GREEN "\x1B[32m"
+#define COLOR_YELLOW "\x1B[33m"
+#define COLOR_BLUE "\x1B[34m"
+#define COLOR_RESET "\x1B[0m"
 
-#define eval(expr) self.out <<"[OP] " #expr "\n"; expr;
+
+#define assert(expr) try{ \
+if(!(expr)){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << "\n";; return false;} \
+else {self.out << "[" COLOR_GREEN "OK" COLOR_RESET "]   " #expr << "\n";} \
+}catch(...){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << " EXCEPTION" << "\n"; return false;}
+
+#define eval(expr) self.out <<"[" COLOR_YELLOW "EXP" COLOR_RESET "]  " #expr "\n"; expr;
+
+#define log(comment, data) self.out << "[" COLOR_BLUE "LOG" COLOR_RESET "]  " << comment << ": " << data << "\n";
+#define log_obj(obj) self.out << "[" COLOR_BLUE "LOG" COLOR_RESET "]  " << #obj ": " << obj << "\n";
 
 class Test {
 public:
@@ -20,9 +30,9 @@ public:
         out << "Running test " << mName << ":\n";
         bool res = mExpression(*this);
         if(res)
-        out << "Success!\n";
+        out << COLOR_GREEN "Success!\n" COLOR_RESET;
         else
-        out << "Fail!\n";
+        out << COLOR_RED "Fail!\n" COLOR_RESET;
         out << "\n";
         return res;
     };
