@@ -8,8 +8,8 @@
 
 class PriorityList {
   public:
-
       class Node {
+
       public:
         long data;
         unsigned int ref_cnt;
@@ -21,6 +21,8 @@ class PriorityList {
 
       template <class Type, class NType>
       class ListIterator : public std::iterator<std::bidirectional_iterator_tag, long, std::ptrdiff_t, Type*, Type&> {
+          friend class PriorityList;
+          friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
       public:
         ListIterator(Node* pNode): node(pNode) {}
         /* TODO: Overflow check */
@@ -31,9 +33,9 @@ class PriorityList {
         bool operator==(const ListIterator& rhs) {return node == rhs.node;}
         bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
         Type& operator*() const {return node->data;}
-        NType* operator->() const { return node;}
       private:
         Node* node;
+        NType* operator->() const { return node;}
       };
 
       typedef ListIterator<long, Node> iterator;
