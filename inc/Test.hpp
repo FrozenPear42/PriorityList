@@ -13,15 +13,20 @@
 #define COLOR_BLUE "\x1B[34m"
 #define COLOR_RESET "\x1B[0m"
 
+#define OK_TAG      "[" COLOR_GREEN "OK" COLOR_RESET "]   "
+#define FAIL_TAG    "[" COLOR_RED "FAIL" COLOR_RESET "] "
+#define EVAL_TAG    "[" COLOR_YELLOW "EVAL" COLOR_RESET "] "
+#define LOG_TAG     "[" COLOR_BLUE "LOG" COLOR_RESET "]  "
+
 #define assert(expr) try{ \
-if(!(expr)){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << "\n";; return false;} \
-else {self.out << "  [" COLOR_GREEN "OK" COLOR_RESET "] " #expr << "\n";} \
-}catch(...){self.out << "[" COLOR_RED "FAIL" COLOR_RESET "] " #expr << " EXCEPTION" << "\n"; return false;}
+if(!(expr)){self.out << FAIL_TAG #expr << "\n"; return false;} \
+else {self.out << OK_TAG #expr << "\n";} \
+}catch(...){self.out << FAIL_TAG #expr << " EXCEPTION" << "\n"; return false;}
 
-#define eval(expr) expr; self.out <<"[" COLOR_YELLOW "EVAL" COLOR_RESET "] " #expr "\n";
+#define eval(expr) expr; self.out << EVAL_TAG #expr "\n";
 
-#define log(comment, data) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << comment << ": " << data << "\n";
-#define log_obj(obj) self.out << " [" COLOR_BLUE "LOG" COLOR_RESET "] " << #obj ": " << obj << "\n";
+#define log(comment, data) self.out << LOG_TAG << comment << ": " << data << "\n";
+#define log_obj(obj) self.out << LOG_TAG << #obj ": " << obj << "\n";
 
 class Test {
 public:
