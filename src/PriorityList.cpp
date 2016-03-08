@@ -36,7 +36,7 @@ long& PriorityList::operator[](int pIdx) {
     for(int i = 0; i != pIdx; it++, i++);
 
     it->ref_cnt++;
-    sortNearNode(it.operator->());
+    sortNearNode(it.getNode());
     return *it;
 }
 
@@ -45,7 +45,7 @@ int PriorityList::find(long pVal) {
     for(auto it = begin(); it != end(); it++, i++)
         if(*it == pVal) {
             it->ref_cnt++;
-            sortNearNode(it.operator->());
+            sortNearNode(it.getNode());
             return i;
         }
     return -1;
@@ -56,7 +56,7 @@ void PriorityList::removeByIdx(int pIdx) {
         throw std::out_of_range("List index out of range");
     auto it = begin();
     for(int i = 0; i != pIdx; it++, i++);
-    removeElement(it.operator->());
+    removeElement(it.getNode());
 
 }
 
@@ -64,7 +64,7 @@ void PriorityList::removeOneByValue(long pVal) {
     auto it = begin();
     for(; it != end() && *it != pVal; it++);
     if(it != end())
-        removeElement(it.operator->());
+        removeElement(it.getNode());
 }
 
 void PriorityList::removeAllByValue(long pVal) {

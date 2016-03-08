@@ -44,6 +44,8 @@ int main(int argc, const char **argv)
         log_obj(list.find(2));
         log_obj(list);
         assert(list.find(2) == 1);
+        log_obj(list);
+        assert(list.find(2) == 0);
         return true;
     }));
 
@@ -163,7 +165,7 @@ int main(int argc, const char **argv)
     }));
 
     tests.push_back(Test("iterator overflow", []{
-        PriorityList list{1};
+        PriorityList list = {1};
         log_obj(list);
         eval(auto it = list.end());
         except(it++);
@@ -173,9 +175,37 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("remove by range", []{
+        PriorityList list = {1,2,3,4,5,6,7,8,9,10,11,-11,-12,-13,0,4};
+        log_obj(list);
+        assert( list.length() == 16 );
+        eval(list.removeByRange(3, 5));
+        log_obj(list);
+        assert(list.length() == 12);
+        eval(list.removeByRange(0, 10));
+        log_obj(list);
+        assert(list.length() == 4);
+        eval(list.removeByRange(-10, 10));
+        log_obj(list);
+        assert(list.length() == 4);
+        eval(list.removeByRange(-10000, 10000));
+        log_obj(list);
+        assert(list.length() == 0);
+        return true;
+    }));
+
+
 
     for(Test& test : tests)
         test.run();
+
+    TEST_OUT << "\nSUMMARY: \n";
+    for(Test& test : tests){
+        if(!test.success)
+            TEST_OUT << COLOR_RED "Test: " << test.mName << " failed!\n" COLOR_RESET;
+        else
+            TEST_OUT << COLOR_GREEN "Test: " << test.mName << " succeed!\n" COLOR_RESET;
+    }
 
 
     return 0;

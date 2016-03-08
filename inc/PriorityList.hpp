@@ -102,5 +102,6 @@ class PriorityList {
       private:
           Node* node;
           NType* operator->() const { return node;}
+          NType* getNode() const{return node;}
       };
 };
