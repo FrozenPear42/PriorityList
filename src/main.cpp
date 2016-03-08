@@ -7,7 +7,7 @@ int main(int argc, const char **argv)
 {
     std::vector<Test> tests;
 
-    tests.push_back(Test("initialization list", [](Test& self){
+    tests.push_back(Test("initialization list", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
         assert(list.length() == 5);
@@ -20,7 +20,7 @@ int main(int argc, const char **argv)
     }));
 
 
-    tests.push_back(Test("push front", [](Test& self){
+    tests.push_back(Test("push front", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
         eval(list.pushFront(11));
@@ -34,7 +34,7 @@ int main(int argc, const char **argv)
 
 
     //TODO: REWRITE TEST
-    tests.push_back(Test("self sorting", [](Test& self){
+    tests.push_back(Test("self sorting", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list.find(4));
         log_obj(list);
@@ -48,7 +48,7 @@ int main(int argc, const char **argv)
     }));
 
 
-    tests.push_back(Test("add element", [](Test& self){
+    tests.push_back(Test("add element", []{
         PriorityList list;
         log_obj(list);
         eval(list += 111);
@@ -62,7 +62,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("compare", [](Test& self){
+    tests.push_back(Test("compare", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2 = {5, 4, 3, 2, 1};
         log_obj(list1);
@@ -79,7 +79,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("length", [](Test& self){
+    tests.push_back(Test("length", []{
         PriorityList list = {-15555, 0, 1222};
         log_obj(list);
         assert(list.length() == 3);
@@ -95,7 +95,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("copy constructor", [](Test& self){
+    tests.push_back(Test("copy constructor", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2(list1);
         log_obj(list1);
@@ -104,7 +104,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("assigment operator", [](Test& self){
+    tests.push_back(Test("assigment operator", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2;
         log_obj(list1);
@@ -117,7 +117,7 @@ int main(int argc, const char **argv)
     }));
 
     //TODO: Improve test
-    tests.push_back(Test("remove duplicates", [](Test& self){
+    tests.push_back(Test("remove duplicates", []{
         PriorityList list = {1, 1, 2, 3, 55, -11, 5, -11, 2, 1, 1, 3, 2, 11};
         log_obj(list);
         assert(list.length() == 14);
@@ -127,7 +127,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("list sum", [](Test& self){
+    tests.push_back(Test("list sum", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2 = {6, 7, 8, 9, 10};
         PriorityList list3;
@@ -142,7 +142,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("list subtract", [](Test& self){
+    tests.push_back(Test("list subtract", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2 = {1, 5, 6, 7};
         PriorityList list3;
@@ -159,10 +159,19 @@ int main(int argc, const char **argv)
         log_obj(list2);
         log_obj(list3);
         assert(list3.length() == 2);
-
         return true;
     }));
 
+    tests.push_back(Test("iterator overflow", []{
+        PriorityList list{1};
+        log_obj(list);
+        eval(auto it = list.end());
+        except(it++);
+        eval(it = list.begin());
+        eval(it--);
+        except(it--);
+        return true;
+    }));
 
 
     for(Test& test : tests)
