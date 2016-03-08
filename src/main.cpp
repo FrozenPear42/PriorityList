@@ -19,13 +19,31 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+
+    tests.push_back(Test("push front", [](Test& self){
+        PriorityList list = {1, 2, 3, 4, 5};
+        log_obj(list);
+        eval(list.pushFront(11));
+        log_obj(list);
+        assert(list.length() == 6);
+        eval(list.pushFront(11));
+        log_obj(list);
+        assert(list.length() == 7);
+        return true;
+    }));
+
+
+    //TODO: REWRITE TEST
     tests.push_back(Test("self sorting", [](Test& self){
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list.find(4));
+        log_obj(list);
         assert(list.find(4) == 0);
         log_obj(list.find(2));
+        log_obj(list);
         log_obj(list.find(2));
-        assert(list.find(2) == 0);
+        log_obj(list);
+        assert(list.find(2) == 1);
         return true;
     }));
 
@@ -50,6 +68,14 @@ int main(int argc, const char **argv)
         log_obj(list1);
         log_obj(list2);
         assert(list1 == list2);
+        eval(list1.pushFront(5));
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
+        eval(list2.pushBack(5));
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
         return true;
     }));
 
@@ -90,6 +116,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    //TODO: Improve test
     tests.push_back(Test("remove duplicates", [](Test& self){
         PriorityList list = {1, 1, 2, 3, 55, -11, 5, -11, 2, 1, 1, 3, 2, 11};
         log_obj(list);

@@ -21,7 +21,7 @@ void PriorityList::pushBack(long pVal) {
 }
 
 void PriorityList::pushFront(long pVal) {
-    pushFrontRef(pVal, 0);
+    pushFrontRef(pVal, 1 + mHead->ref_cnt);
 }
 
 long PriorityList::getByIdx(int pIdx) {
@@ -161,8 +161,8 @@ PriorityList PriorityList::operator-=(const PriorityList& rhs) {
 }
 
 PriorityList& PriorityList::operator=(const PriorityList& rhs) {
-    this->removeAll();
-    this->operator+=(rhs);
+    removeAll();
+    operator+=(rhs);
     return *this;
 }
 
@@ -172,12 +172,17 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
 
     auto li = cBegin();
     auto ri = rhs.cBegin();
-    for(;li != cEnd() && ri != rhs.cEnd(); li++, ri++)
-          if(*li != *ri)
+    for(;li != cEnd() && ri != rhs.cEnd(); ++li, ++ri)
+          if(li->data != ri->data || li->ref_cnt != ri->ref_cnt)
             return false;
+
     if(li == cEnd() && ri == rhs.cEnd())
       return true;
     return false;
+ }
+
+ bool PriorityList::operator!=(const PriorityList& rhs) const {
+     return !(operator==(rhs));
  }
 
  void PriorityList::pushFirstRef(long pData, unsigned int pRefCnt) {
@@ -195,6 +200,7 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
     mHead->prev = node;
     mHead = node;
     mSize++;
+    sortNearNode(node);
  }
 
  void PriorityList::pushBackRef(long pData, unsigned int pRefCnt) {
@@ -205,6 +211,7 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
     mTail->next = node;
     mTail = node;
     mSize++;
+    sortNearNode(node);
  }
 
 void PriorityList::sortNearNode(PriorityList::Node *pNode) {
@@ -212,7 +219,9 @@ void PriorityList::sortNearNode(PriorityList::Node *pNode) {
     if(pNode == nullptr || ptr == nullptr) //if pNode is at the beggingng of the list
         return;
 
-    while(ptr != nullptr && ptr->ref_cnt <= pNode->ref_cnt)
+    while(ptr != nullptr &&
+         ((ptr->ref_cnt == pNode->ref_cnt && ptr->data < pNode->data) ||
+         ptr->ref_cnt < pNode->ref_cnt))
         ptr = ptr->prev;
 
     if(ptr == pNode->prev) // No need to sort

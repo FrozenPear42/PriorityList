@@ -49,6 +49,8 @@ class PriorityList {
       PriorityList operator-=(const PriorityList& rhs);
       PriorityList& operator=(const PriorityList& rhs);
       bool operator==(const PriorityList& rhs) const;
+      bool operator!=(const PriorityList& rhs) const;
+
 
       friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
 
