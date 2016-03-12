@@ -194,6 +194,25 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("insert", []{
+        PriorityList list;
+        log_obj(list);
+        eval(list.insert(11, 3));
+        log_obj(list);
+        eval(list.insert(12, 3));
+        log_obj(list);
+        eval(list.insert(13, 3));
+        log_obj(list);
+        eval(list.insert(15, 0));
+        log_obj(list);
+        assert(list.length() == 4)
+        eval(list.insert(16, 1));
+        log_obj(list);
+        assert(list.length() == 5);
+        assert(list.find(16) != -1);
+        return true;
+    }));
+
 
 
     for(Test& test : tests)

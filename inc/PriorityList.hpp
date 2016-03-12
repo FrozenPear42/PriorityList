@@ -19,8 +19,8 @@ class PriorityList {
 
       void pushFront(long pVal);
       void pushBack(long pVal);
-      void insertBeforeIdx(long pVal, int pIdx);//TODO
-      void insertAfterIdx(long pVal, int pIdx);//TODO
+      void insert(long pVal, int pIdx);
+
 
       void removeByIdx(int pIdx);
       void removeOneByValue(long pVal);
@@ -44,9 +44,9 @@ class PriorityList {
       int length() const;
 
       PriorityList operator+(const PriorityList& rhs) const;
-      PriorityList& operator +=(const PriorityList& rhs);
       PriorityList operator-(const PriorityList& rhs) const;
-      PriorityList operator-=(const PriorityList& rhs);
+      PriorityList& operator +=(const PriorityList& rhs);
+      PriorityList& operator-=(const PriorityList& rhs);
       PriorityList& operator=(const PriorityList& rhs);
       bool operator==(const PriorityList& rhs) const;
       bool operator!=(const PriorityList& rhs) const;
@@ -59,9 +59,7 @@ class PriorityList {
       Node* mTail;
       int mSize;
 
-      void pushFirstRef(long pData, unsigned int pRefCnt);
-      void pushFrontRef(long pData, unsigned int pRefCnt);
-      void pushBackRef(long pData, unsigned int pRefCnt);
+      void insertRef(long pData, int pIdx, unsigned int pRefCnt);
 
       void sortNearNode(Node* pNode);
       Node* removeElement(Node* pNode);
@@ -74,6 +72,8 @@ class PriorityList {
           Node* prev;
           Node(long d): data(d), ref_cnt(0), next(nullptr), prev(nullptr) {}
           Node(long d, unsigned int cnt): data(d), ref_cnt(cnt), next(nullptr), prev(nullptr) {}
+          bool operator>(const Node& rhs) {return ((ref_cnt == rhs.ref_cnt && data > rhs.data) || (ref_cnt > rhs.ref_cnt));}
+          bool operator<(const Node& rhs) {return !operator>(rhs);}
       };
 
       template <class Type, class NType>
@@ -101,7 +101,7 @@ class PriorityList {
           Type& operator*() const {return node->data;}
       private:
           Node* node;
-          NType* operator->() const { return node;}
-          NType* getNode() const{return node;}
+          NType* operator->() const { return node; }
+          NType* getNode() const { return node; }
       };
 };

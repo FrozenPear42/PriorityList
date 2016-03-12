@@ -13,15 +13,19 @@ PriorityList::PriorityList(const PriorityList& pList) : PriorityList() {
 
 PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
     for(auto it = pList.begin();it != pList.end(); it++)
-        pushBackRef(*it, 0);
+        insertRef(*it, mSize, 0);
 }
 
 void PriorityList::pushBack(long pVal) {
-    pushBackRef(pVal, 0);
+    insertRef(pVal, mSize, 0);
 }
 
 void PriorityList::pushFront(long pVal) {
-    pushFrontRef(pVal, 1 + mHead->ref_cnt);
+    insertRef(pVal, 0, 1 + mHead->ref_cnt);
+}
+
+void PriorityList::insert(long pVal, int pIdx) {
+    insertRef(pVal, pIdx, 0);
 }
 
 long PriorityList::getByIdx(int pIdx) {
@@ -143,7 +147,7 @@ PriorityList PriorityList::operator+(const PriorityList& rhs) const {
 
 PriorityList& PriorityList::operator+=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++) {
-            pushBackRef(it->data, it->ref_cnt);
+            insertRef(it->data, mSize, it->ref_cnt);
     }
     return *this;
 }
@@ -154,7 +158,7 @@ PriorityList PriorityList::operator-(const PriorityList& rhs) const {
     return res;
 }
 
-PriorityList PriorityList::operator-=(const PriorityList& rhs) {
+PriorityList& PriorityList::operator-=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++)
         removeOneByValue(*it);
     return *this;
@@ -185,43 +189,44 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
      return !(operator==(rhs));
  }
 
- void PriorityList::pushFirstRef(long pData, unsigned int pRefCnt) {
+ void PriorityList::insertRef(long pData, int pIdx, unsigned int pRefCnt) {
      Node* node = new Node(pData, pRefCnt);
-     mHead = node;
-     mTail = node;
+     if(mSize == 0) {
+         mHead = node;
+         mTail = node;
+     }
+     else if(pIdx == 0) {
+         node->next = mHead;
+         mHead->prev = node;
+         mHead = node;
+     } else if(pIdx >= mSize) {
+         node->prev = mTail;
+         mTail->next = node;
+         mTail = node;
+     } else {
+         auto it = begin();
+         for(int i = 0; i != pIdx; ++i, ++it);
+
+         node->next = it.getNode();
+         node->prev = it->prev;
+         it->prev->next = node;
+         it->prev = node;
+     }
      mSize++;
+     sortNearNode(node);
  }
 
- void PriorityList::pushFrontRef(long pData, unsigned int pRefCnt) {
-     if(mSize == 0)
-        return pushFirstRef(pData, pRefCnt);
-    Node* node = new Node(pData, pRefCnt);
-    node->next = mHead;
-    mHead->prev = node;
-    mHead = node;
-    mSize++;
-    sortNearNode(node);
- }
-
- void PriorityList::pushBackRef(long pData, unsigned int pRefCnt) {
-     if(mSize == 0)
-        return pushFirstRef(pData, pRefCnt);
-    Node* node = new Node(pData, pRefCnt);
-    node->prev = mTail;
-    mTail->next = node;
-    mTail = node;
-    mSize++;
-    sortNearNode(node);
- }
 
 void PriorityList::sortNearNode(PriorityList::Node *pNode) {
-    Node* ptr = pNode->prev;
-    if(pNode == nullptr || ptr == nullptr) //if pNode is at the beggingng of the list
+    if(pNode == nullptr)
         return;
 
-    while(ptr != nullptr &&
-         ((ptr->ref_cnt == pNode->ref_cnt && ptr->data < pNode->data) ||
-         ptr->ref_cnt < pNode->ref_cnt))
+    Node* ptr = pNode->prev;
+
+    if(ptr == nullptr) //if pNode is at the beggingng of the list
+        return;
+
+    while(ptr != nullptr && (*ptr)<(*pNode))
         ptr = ptr->prev;
 
     if(ptr == pNode->prev) // No need to sort
@@ -234,6 +239,7 @@ void PriorityList::sortNearNode(PriorityList::Node *pNode) {
         pNode->prev->next = nullptr;
         mTail = pNode->prev;
     }
+
     if(ptr == nullptr) { //have to move pNode to the begining of the list
         pNode->next = mHead;
         pNode->prev = nullptr;
@@ -278,6 +284,7 @@ std::ostream& operator<<(std::ostream& out, PriorityList& mList)
     for(auto it = mList.cBegin(); it != mList.cEnd(); it++)
     {
         out << it->data << "(" << it->ref_cnt << "), ";
+        //out << it->data << "(" << it->ref_cnt << ")["<< it.getNode() << ", " << it->prev << ", " << it->next << "], ";
     }
     return out;
 }
