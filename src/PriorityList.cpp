@@ -13,20 +13,38 @@ PriorityList::PriorityList(const PriorityList& pList) : PriorityList() {
 
 PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
     for(auto it = pList.begin();it != pList.end(); it++)
-        insertRef(*it, mSize, 0);
+        internalInsert(*it, mSize, 0);
+}
+
+PriorityList& PriorityList::operator=(const PriorityList& rhs) {
+    removeAll();
+    operator+=(rhs);
+    return *this;
 }
 
 void PriorityList::pushBack(long pVal) {
-    insertRef(pVal, mSize, 0);
+    internalInsert(pVal, mSize, 0);
 }
 
 void PriorityList::pushFront(long pVal) {
-    insertRef(pVal, 0, 1 + mHead->ref_cnt);
+    internalInsert(pVal, 0, 1 + mHead->ref_cnt);
 }
 
 void PriorityList::insert(long pVal, int pIdx) {
-    insertRef(pVal, pIdx, 0);
+    internalInsert(pVal, pIdx);
 }
+
+
+PriorityList& PriorityList::operator+=(const long pVal) {
+    pushBack(pVal);
+    return (*this);
+}
+
+PriorityList& PriorityList::operator-=(const long pVal) {
+    removeOneByValue(pVal);
+    return (*this);
+}
+
 
 long PriorityList::getByIdx(int pIdx) {
     return operator[](pIdx);
@@ -55,20 +73,21 @@ int PriorityList::find(long pVal) {
     return -1;
 }
 
-void PriorityList::removeByIdx(int pIdx) {
+void PriorityList::removeByIdx(int pIdx) throw(std::out_of_range) {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
-    auto it = begin();
-    for(int i = 0; i != pIdx; it++, i++);
-    removeElement(it.getNode());
+    Node* node = mHead;
+    for(int i = 0; i != pIdx; i++, node = node->next);
+    removeElement(node);
 
 }
 
 void PriorityList::removeOneByValue(long pVal) {
-    auto it = begin();
-    for(; it != end() && *it != pVal; it++);
-    if(it != end())
-        removeElement(it.getNode());
+    Node* node = mHead;
+    while(node != nullptr && node->data != pVal)
+        node = node->next;
+    if(node != nullptr)
+        removeElement(node);
 }
 
 void PriorityList::removeAllByValue(long pVal) {
@@ -105,16 +124,6 @@ void PriorityList::removeDuplicates() {
     }
 }
 
-PriorityList& PriorityList::operator+=(const long pVal) {
-    pushBack(pVal);
-    return (*this);
-}
-
-PriorityList& PriorityList::operator-=(const long pVal) {
-    removeOneByValue(pVal);
-    return (*this);
-}
-
 PriorityList::iterator PriorityList::begin() const {
   return PriorityList::iterator(mHead);
 }
@@ -147,7 +156,7 @@ PriorityList PriorityList::operator+(const PriorityList& rhs) const {
 
 PriorityList& PriorityList::operator+=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++) {
-            insertRef(it->data, mSize, it->ref_cnt);
+            internalInsert(it->data, mSize, it->ref_cnt);
     }
     return *this;
 }
@@ -161,12 +170,6 @@ PriorityList PriorityList::operator-(const PriorityList& rhs) const {
 PriorityList& PriorityList::operator-=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); it++)
         removeOneByValue(*it);
-    return *this;
-}
-
-PriorityList& PriorityList::operator=(const PriorityList& rhs) {
-    removeAll();
-    operator+=(rhs);
     return *this;
 }
 
@@ -189,7 +192,16 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
      return !(operator==(rhs));
  }
 
- void PriorityList::insertRef(long pData, int pIdx, unsigned int pRefCnt) {
+void PriorityList::internalInsert(long pData, int pIdx) {
+  if ((pIdx < mSize) && (pIdx >= 0)) {
+    Node *node = mHead;
+
+    for (int i = 0; i < pIdx; i++, node = node->next);
+    return internalInsert(pData, pIdx, node->ref_cnt);
+  } else return internalInsert(pData, pIdx, 0);
+}
+
+ void PriorityList::internalInsert(long pData, int pIdx, unsigned int pRefCnt) {
      Node* node = new Node(pData, pRefCnt);
      if(mSize == 0) {
          mHead = node;
@@ -251,7 +263,6 @@ void PriorityList::sortNearNode(PriorityList::Node *pNode) {
         ptr->next->prev = pNode;
         ptr->next = pNode;
     }
-
 }
 
 PriorityList::Node* PriorityList::removeElement(PriorityList::Node* pNode) {

@@ -16,13 +16,13 @@ class PriorityList {
       PriorityList(): mHead(nullptr), mTail(nullptr), mSize(0) {}
       PriorityList(const PriorityList& pList);
       PriorityList(std::initializer_list<long> pList);
+      PriorityList& operator=(const PriorityList& rhs);
 
       void pushFront(long pVal);
       void pushBack(long pVal);
       void insert(long pVal, int pIdx);
 
-
-      void removeByIdx(int pIdx);
+      void removeByIdx(int pIdx) throw(std::out_of_range);
       void removeOneByValue(long pVal);
       void removeAllByValue(long pVal);
       void removeByRange(long pLVal,long pRVal);
@@ -47,7 +47,6 @@ class PriorityList {
       PriorityList operator-(const PriorityList& rhs) const;
       PriorityList& operator +=(const PriorityList& rhs);
       PriorityList& operator-=(const PriorityList& rhs);
-      PriorityList& operator=(const PriorityList& rhs);
       bool operator==(const PriorityList& rhs) const;
       bool operator!=(const PriorityList& rhs) const;
 
@@ -59,7 +58,8 @@ class PriorityList {
       Node* mTail;
       int mSize;
 
-      void insertRef(long pData, int pIdx, unsigned int pRefCnt);
+      void internalInsert(long pData, int pIdx, unsigned int pRefCnt);
+      void internalInsert(long pData, int pIdx);
 
       void sortNearNode(Node* pNode);
       Node* removeElement(Node* pNode);
