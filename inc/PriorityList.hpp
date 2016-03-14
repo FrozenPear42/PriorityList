@@ -28,13 +28,16 @@ class PriorityList {
       void removeByRange(long pLVal,long pRVal);
       void removeAll();
       void removeDuplicates();
+      PriorityList unique();
 
       PriorityList& operator+=(const long pVal);
       PriorityList& operator-=(const long pVal);
 
-      long getByIdx(int pIdx);
-      long& operator[](int pIdx);
+      long getByIdx(int pIdx) throw(std::out_of_range);
+      long& operator[](int pIdx) throw(std::out_of_range);
       int find(long pVal);
+      PriorityList::iterator itFind(long pVal);
+
 
       PriorityList::iterator begin() const;
       PriorityList::iterator end() const;
@@ -50,7 +53,6 @@ class PriorityList {
       bool operator==(const PriorityList& rhs) const;
       bool operator!=(const PriorityList& rhs) const;
 
-
       friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
 
   private:
@@ -60,9 +62,8 @@ class PriorityList {
 
       void internalInsert(long pData, int pIdx, unsigned int pRefCnt);
       void internalInsert(long pData, int pIdx);
-
-      void sortNearNode(Node* pNode);
       Node* removeElement(Node* pNode);
+      void sortNearNode(Node* pNode);
   public:
       class Node {
       public:
@@ -82,20 +83,20 @@ class PriorityList {
           friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
       public:
           ListIterator(Node* pNode): node(pNode) {}
-          ListIterator& operator++() {
+          ListIterator& operator++() throw (std::out_of_range){
               if(node == nullptr)
               throw std::out_of_range("Iterator out of range");
               node = node->next;
               return *this;
           }
-          ListIterator& operator--() {
+          ListIterator& operator--() throw (std::out_of_range) {
               if(node == nullptr)
               throw std::out_of_range("Iterator out of range");
               node = node->prev;
               return *this;
           }
-          ListIterator operator++(int) {ListIterator tmp(*this); operator++(); return tmp;}
-          ListIterator operator--(int) {ListIterator tmp(*this); operator--(); return tmp;}
+          ListIterator operator++(int) throw (std::out_of_range) {ListIterator tmp(*this); operator++(); return tmp;}
+          ListIterator operator--(int) throw (std::out_of_range) {ListIterator tmp(*this); operator--(); return tmp;}
           bool operator==(const ListIterator& rhs) {return node == rhs.node;}
           bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
           Type& operator*() const {return node->data;}
