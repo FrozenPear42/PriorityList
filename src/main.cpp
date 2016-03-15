@@ -1,4 +1,8 @@
-/* */
+/**
+* @autor Wojciech Gruszka
+* @email wojciech@gruszka.eu
+*
+*/
 #include <vector>
 #include "PriorityList.hpp"
 #include "Test.hpp"
