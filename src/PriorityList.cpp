@@ -116,7 +116,6 @@ void PriorityList::removeByIdx(int pIdx)  {
     Node* node = mHead;
     for(int i = 0; i != pIdx; ++i, node = node->next);
         removeElement(node);
-
 }
 
 /** Removes specified value fom the list. If there are duplicates of that value on the list
@@ -173,7 +172,6 @@ PriorityList PriorityList::unique() {
     list.removeDuplicates();
     return list;
 }
-
 
 /** returns iterator to the begining of the list. iterators don't change reference counters */
 PriorityList::iterator PriorityList::begin() const {

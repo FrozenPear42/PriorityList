@@ -19,6 +19,11 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("testing API self test - fail", []{
+        assert(1 != 1);
+        return true;
+    }));
+
     tests.push_back(Test("initialization list", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
@@ -192,7 +197,32 @@ int main(int argc, const char **argv)
     }));
 
     tests.push_back(Test("self sorting", []{
-        return false;
+        PriorityList list = {1,2,3,4,5,6};
+        log_obj(list);
+        eval(for(int i = 0; i < 10; i++) list.find(4))
+        assert(list[0] == 4 );
+        eval(for(int i = 0; i < 16; i++) list.find(1))
+        assert(list[0] == 1 );
+        eval(list.pushBack(555));
+        eval(for(int i = 0; i < 20; i++) list.itFind(555))
+        log_obj(list);
+        assert(list[0] == 555 );
+        assert(list[1] == 1 );
+        assert(list[2] == 4 );
+        return true;
+    }));
+
+    tests.push_back(Test("self sorting - get element", []{
+        PriorityList list = {3, 2, 1};
+        log_obj(list);
+        assert(list[2] == 1);
+        log_obj(list);
+        assert(list[0] == 1);
+        eval(list.getByIdx(1));
+        eval(list.getByIdx(1));
+        log_obj(list);
+        assert(list.getByIdx(0) == 3);
+        return true;
     }));
 
     tests.push_back(Test("list sum", []{
