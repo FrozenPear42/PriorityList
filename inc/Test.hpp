@@ -38,7 +38,7 @@ TEST_OUT << OK_TAG #expr << "\n";                               \
     return false;                                               \
 }
 
-#define except(expr) try{                                       \
+#define expect(expr) try{                                       \
     expr;                                                       \
     TEST_OUT << FAIL_TAG #expr": Expected exception!\n";        \
     return false;                                               \

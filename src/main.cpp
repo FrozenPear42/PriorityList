@@ -7,6 +7,18 @@ int main(int argc, const char **argv)
 {
     std::vector<Test> tests;
 
+    tests.push_back(Test("testing API self test", []{
+        assert(1 == 1);
+        assert(1 != 0);
+        log("this is sample log", "everything is ok");
+        double pi = 3.1415;
+        log_obj(pi);
+        eval(pi = 0);
+        assert(pi == 0);
+        expect(throw "test");
+        return true;
+    }));
+
     tests.push_back(Test("initialization list", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
@@ -25,98 +37,101 @@ int main(int argc, const char **argv)
         eval(list.pushFront(11));
         log_obj(list);
         assert(list.length() == 6);
-        eval(list.pushFront(11));
+        assert(list[0] == 11)
+        eval(list.pushFront(12));
         log_obj(list);
         assert(list.length() == 7);
+        assert(list[0] == 12);
         return true;
     }));
 
-    //TODO: REWRITE TEST
-    tests.push_back(Test("self sorting", []{
-        return false;
-    }));
-
-
-    tests.push_back(Test("-=/+= operators for items", []{
-        PriorityList list;
+    tests.push_back(Test("push back", []{
+        PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
-        eval(list += 111);
-        eval(list += 123);
-        eval(list += 111);
-        log_obj(list);
-        assert(list.length() == 3);
-        eval(list -= 111);
-        log_obj(list);
-        assert(list.length() == 2);
-        return true;
-    }));
-
-    tests.push_back(Test("remove element - less used", []{
-        PriorityList list;
-        log_obj(list);
-        eval(list += 111);
-        eval(list += 123);
-        eval(list += 111);
-        log_obj(list);
-        eval(for(int i = 0; i < 10; ++i) list.find(111));
-        assert(list.length() == 3);
-        eval(list -= 111);
-        log_obj(list);
-        assert(list.length() == 2);
-        return true;
-    }));
-
-    tests.push_back(Test("compare", []{
-        PriorityList list1 = {1, 2, 3, 4, 5};
-        PriorityList list2 = {5, 4, 3, 2, 1};
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 == list2);
-        eval(list1.pushFront(5));
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 != list2);
-        eval(list2.pushBack(5));
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 != list2);
-        return true;
-    }));
-
-    tests.push_back(Test("length", []{
-        PriorityList list = {-15555, 0, 1222};
-        log_obj(list);
-        assert(list.length() == 3);
         eval(list.pushBack(11));
         log_obj(list);
-        assert(list.length() == 4);
-        eval(list.removeOneByValue(0));
+        assert(list.length() == 6);
+        assert(list.find(11) <= list.length());
+        eval(list.pushBack(12));
+        log_obj(list);
+        assert(list.length() == 7);
+        assert(list.find(12) <= list.length());
+        eval(list.pushBack(-1));
+        log_obj(list);
+        assert(list.length() == 8);
+        assert(list.find(-1) <= list.length());
+        return true;
+    }));
+
+    tests.push_back(Test("insert", []{
+        PriorityList list = {1, 2, 3, 4};
+        log_obj(list);
+        eval(list.insert(11, 10));
+        log_obj(list);
+        assert(list.find(11) != -1);
+        eval(list.insert(12, 3));
+        log_obj(list);
+        assert(list.find(12) <= 3);
+        eval(list.insert(-1, 3));
+        log_obj(list);
+        assert(list.find(-1) <= 3);
+        eval(list.insert(-11, 5));
+        log_obj(list);
+        assert(list.find(-11) <= 5);
+        return true;
+    }));
+
+    tests.push_back(Test("remove element", []{
+        PriorityList list = {-111, 111, 111, 123};
+        log_obj(list);
+        eval(list.removeOneByValue(111));
         log_obj(list);
         assert(list.length() == 3);
-        eval(list.removeAll());
+        assert(list.find(111) != -1);
+        eval(list.removeByIdx(1));
+        log_obj(list);
+        assert(list.length() == 2);
+        expect(list.removeByIdx(122));
+        return true;
+    }));
+
+    tests.push_back(Test("remove element (with duplicates)", []{
+        PriorityList list = {111,111,123};
+        log_obj(list);
+        eval(for(int i = 0; i < 10; ++i) list.find(111));
+        log_obj(list);
+        assert(list.length() == 3);
+        eval(list -= 111);
+        log_obj(list);
+        assert(list.length() == 2);
+        return true;
+    }));
+
+    tests.push_back(Test("remove all elements of certain value", []{
+        PriorityList list = {-111, 222, 33, 111, 111, 111,123};
+        log_obj(list);
+        eval(list.removeAllByValue(111));
+        assert(list.length() == 4);
+        assert(list.find(111) == -1);
+        return true;
+    }));
+
+    tests.push_back(Test("remove by range", []{
+        PriorityList list = {1,2,3,4,5,6,7,8,9,10,11,-11,-12,-13,0,4};
+        log_obj(list);
+        assert( list.length() == 16 );
+        eval(list.removeByRange(3, 5));
+        log_obj(list);
+        assert(list.length() == 12);
+        eval(list.removeByRange(0, 10));
+        log_obj(list);
+        assert(list.length() == 4);
+        eval(list.removeByRange(-10, 10));
+        log_obj(list);
+        assert(list.length() == 4);
+        eval(list.removeByRange(-10000, 10000));
         log_obj(list);
         assert(list.length() == 0);
-        return true;
-    }));
-
-    tests.push_back(Test("copy constructor", []{
-        PriorityList list1 = {1, 2, 3, 4, 5};
-        PriorityList list2(list1);
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 == list2);
-        return true;
-    }));
-
-    tests.push_back(Test("assigment operator", []{
-        PriorityList list1 = {1, 2, 3, 4, 5};
-        PriorityList list2;
-        log_obj(list1);
-        log_obj(list2);
-        eval(list2 = list1);
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 == list2);
         return true;
     }));
 
@@ -127,6 +142,8 @@ int main(int argc, const char **argv)
         assert(list.length() == 14);
         eval(list.removeDuplicates());
         log_obj(list);
+        assert(list.length() == 7);
+        eval(list.removeDuplicates());
         assert(list.length() == 7);
         return true;
     }));
@@ -143,6 +160,31 @@ int main(int argc, const char **argv)
         return true;
     }));
 
+    tests.push_back(Test("-=/+= operators for items", []{
+        PriorityList list;
+        log_obj(list);
+        eval(list += 111);
+        eval(list += 123);
+        eval(list += 111);
+        log_obj(list);
+        assert(list.length() == 3);
+        eval(list -= 111);
+        log_obj(list);
+        assert(list.length() == 2);
+        eval(list -= 111);
+        log_obj(list);
+        assert(list.length() == 1);
+        assert(list.find(111) == -1);
+        return true;
+    }));
+
+    tests.push_back(Test("get", []{
+        return false;
+    }));
+
+    tests.push_back(Test("self sorting", []{
+        return false;
+    }));
 
     tests.push_back(Test("list sum", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
@@ -179,56 +221,70 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("iterator overflow", []{
-        PriorityList list = {1};
-        log_obj(list);
-        eval(auto it = list.end());
-        except(it++);
-        eval(it = list.begin());
-        eval(it--);
-        except(it--);
+    tests.push_back(Test("copy constructor", []{
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2(list1);
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 == list2);
         return true;
     }));
 
-    tests.push_back(Test("remove by range", []{
-        PriorityList list = {1,2,3,4,5,6,7,8,9,10,11,-11,-12,-13,0,4};
+    tests.push_back(Test("assigment operator", []{
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2;
+        log_obj(list1);
+        log_obj(list2);
+        eval(list2 = list1);
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 == list2);
+        return true;
+    }));
+
+    tests.push_back(Test("length", []{
+        PriorityList list = {-15555, 0, 1222};
         log_obj(list);
-        assert( list.length() == 16 );
-        eval(list.removeByRange(3, 5));
-        log_obj(list);
-        assert(list.length() == 12);
-        eval(list.removeByRange(0, 10));
+        assert(list.length() == 3);
+        eval(list.pushBack(11));
         log_obj(list);
         assert(list.length() == 4);
-        eval(list.removeByRange(-10, 10));
+        eval(list.removeOneByValue(0));
         log_obj(list);
-        assert(list.length() == 4);
-        eval(list.removeByRange(-10000, 10000));
+        assert(list.length() == 3);
+        eval(list.removeAll());
         log_obj(list);
         assert(list.length() == 0);
         return true;
     }));
 
-    tests.push_back(Test("insert", []{
-        PriorityList list;
-        log_obj(list);
-        eval(list.insert(11, 3));
-        log_obj(list);
-        eval(list.insert(12, 3));
-        log_obj(list);
-        eval(list.insert(13, 3));
-        log_obj(list);
-        eval(list.insert(15, 0));
-        log_obj(list);
-        assert(list.length() == 4)
-        eval(list.insert(16, 1));
-        log_obj(list);
-        assert(list.length() == 5);
-        assert(list.find(16) != -1);
+    tests.push_back(Test("compare", []{
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2 = {5, 4, 3, 2, 1};
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 == list2);
+        eval(list1.pushFront(5));
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
+        eval(list2.pushBack(5));
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
         return true;
     }));
 
-
+    tests.push_back(Test("iterator overflow", []{
+        PriorityList list = {1};
+        log_obj(list);
+        eval(auto it = list.end());
+        expect(it++);
+        eval(it = list.begin());
+        eval(it--);
+        expect(it--);
+        return true;
+    }));
 
     for(Test& test : tests)
         test.run();

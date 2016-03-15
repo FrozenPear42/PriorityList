@@ -5,6 +5,7 @@
  */
 #pragma once
 #include <iterator>
+#include <stdexcept>
 
 class PriorityList {
   public:
@@ -81,6 +82,7 @@ class PriorityList {
       class ListIterator : public std::iterator<std::bidirectional_iterator_tag, long, std::ptrdiff_t, Type*, Type&> {
           friend class PriorityList;
           friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
+
       public:
           ListIterator(Node* pNode): node(pNode) {}
           ListIterator& operator++() {
