@@ -24,6 +24,7 @@ PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
         internalInsert(*it, mSize, 0);
 }
 
+/** Assigment operator overloaded for correct memory allocation */
 PriorityList& PriorityList::operator=(const PriorityList& rhs) {
     removeAll();
     operator+=(rhs);
@@ -33,15 +34,18 @@ PriorityList& PriorityList::operator=(const PriorityList& rhs) {
 /** Inserts specified value at the end of the list with reference counter
  equal zero. Than organise the list. If there were more items with reference
  counter equal to 0, there is no guarantee that this item will remain at the end of the list */
- */
 void PriorityList::pushBack(long pVal) {
     internalInsert(pVal, mSize, 0);
 }
 
+/** Inserts specified value at the beggining of the list. There is guarantee that
+this element will stay at the begining of the list */
 void PriorityList::pushFront(long pVal) {
     internalInsert(pVal, 0);
 }
 
+/** Inserts specified value at position given by index.The final index
+ will be less than or equal to specified index */
 void PriorityList::insert(long pVal, int pIdx) {
     internalInsert(pVal, pIdx);
 }
@@ -92,7 +96,7 @@ int PriorityList::find(long pVal) {
     return -1;
 }
 
-/** returns iterator to specified value or to end if value not found, than increments thats value
+/** Returns iterator to specified value or to end if value not found, than increments thats value
  reference counter and reorganise the list iterator is pointing found value so no matters how the
  list will be reorganised returned iterator will stil point found value */
 PriorityList::iterator PriorityList::itFind(long pVal) {
@@ -106,7 +110,7 @@ PriorityList::iterator PriorityList::itFind(long pVal) {
     return it;
 }
 
-
+/** Removes value at specified index. If index out of range exception is thrown */
 void PriorityList::removeByIdx(int pIdx) throw(std::out_of_range) {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
@@ -116,18 +120,22 @@ void PriorityList::removeByIdx(int pIdx) throw(std::out_of_range) {
 
 }
 
+/** Removes specified value fom the list. If there are duplicates of that value on the list
+only the one with the least reference counter is removed */
 void PriorityList::removeOneByValue(long pVal) {
-    Node* node = mHead;
+    Node* node = mTail;
     while(node != nullptr && node->data != pVal)
-        node = node->next;
+        node = node->prev;
     if(node != nullptr)
         removeElement(node);
 }
 
+/** Removes all items of specified value from the list */
 void PriorityList::removeAllByValue(long pVal) {
     return removeByRange(pVal, pVal);
 }
 
+/** Removes all items with value within specified range */
 void PriorityList::removeByRange(long pLVal, long pRVal) {
     Node* node = mHead;
     while(node != nullptr) {
@@ -138,12 +146,14 @@ void PriorityList::removeByRange(long pLVal, long pRVal) {
     }
 }
 
+/** REmoves all values from the list */
 void PriorityList::removeAll() {
     Node* node = mHead;
     while(node != nullptr)
         node = removeElement(node);
 }
 
+/* Removes duplicates from the list, leaving those whith highest reference count */
 void PriorityList::removeDuplicates() {
     using Set = std::unordered_set<long>;
     Set values;
@@ -151,7 +161,7 @@ void PriorityList::removeDuplicates() {
     while (node != nullptr) {
         if(values.find(node->data) != values.end())
             node = removeElement(node);
-        else{
+        else {
             values.insert(node->data);
             node = node->next;
         }
@@ -166,20 +176,24 @@ PriorityList PriorityList::unique() {
 }
 
 
+/** returns iterator to the begining of the list. iterators don't change reference counters */
 PriorityList::iterator PriorityList::begin() const {
   return PriorityList::iterator(mHead);
 }
 
+/** returns iterator to the end of the list. iterators don't change reference counters */
 PriorityList::iterator PriorityList::end() const {
     if(mTail != nullptr)
         return PriorityList::iterator(mTail->next);
     return PriorityList::iterator(nullptr);
 }
 
+/** returns const iterator to the begining of the list. iterators don't change reference counters */
 PriorityList::constIterator PriorityList::cBegin() const {
   return PriorityList::constIterator(mHead);
 }
 
+/** returns const iterator to the end of the list. iterators don't change reference counters */
 PriorityList::constIterator PriorityList::cEnd() const {
     if(mTail != nullptr)
         return PriorityList::constIterator(mTail->next);
@@ -196,17 +210,17 @@ PriorityList PriorityList::operator+(const PriorityList& rhs) const {
     return res;
 }
 
+PriorityList PriorityList::operator-(const PriorityList& rhs) const {
+    PriorityList res(*this);
+    res.operator-=(rhs);
+    return res;
+}
+
 PriorityList& PriorityList::operator+=(const PriorityList& rhs) {
     for(auto it = rhs.cBegin(); it != rhs.cEnd(); ++it) {
             internalInsert(it->data, mSize, it->ref_cnt);
     }
     return *this;
-}
-
-PriorityList PriorityList::operator-(const PriorityList& rhs) const {
-    PriorityList res(*this);
-    res.operator-=(rhs);
-    return res;
 }
 
 PriorityList& PriorityList::operator-=(const PriorityList& rhs) {
@@ -234,6 +248,8 @@ bool PriorityList::operator==(const PriorityList& rhs) const {
      return !(operator==(rhs));
  }
 
+/** Hadles insertion into list, this method determines reference counter of element
+that is being inserted. */
 void PriorityList::internalInsert(long pData, int pIdx) {
   if ((pIdx < mSize) && (pIdx >= 0)) {
     Node *node = mHead;
@@ -243,6 +259,7 @@ void PriorityList::internalInsert(long pData, int pIdx) {
   } else return internalInsert(pData, pIdx, 0);
 }
 
+/** Handles insertion into the list */
  void PriorityList::internalInsert(long pData, int pIdx, unsigned int pRefCnt) {
      Node* node = new Node(pData, pRefCnt);
      if(mSize == 0) {
@@ -270,7 +287,7 @@ void PriorityList::internalInsert(long pData, int pIdx) {
      sortNearNode(node);
  }
 
-
+/** Moves given node to proper position. */
 void PriorityList::sortNearNode(PriorityList::Node *pNode) {
     if(pNode == nullptr)
         return;
@@ -307,6 +324,8 @@ void PriorityList::sortNearNode(PriorityList::Node *pNode) {
     }
 }
 
+/** Handles removing of given element. Returns pointer to next element after
+the removed one */
 PriorityList::Node* PriorityList::removeElement(PriorityList::Node* pNode) {
     if(pNode == nullptr)
         return nullptr;
@@ -335,9 +354,7 @@ PriorityList::Node* PriorityList::removeElement(PriorityList::Node* pNode) {
 std::ostream& operator<<(std::ostream& out, PriorityList& mList)
 {
     for(auto it = mList.cBegin(); it != mList.cEnd(); ++it)
-    {
         out << it->data << "(" << it->ref_cnt << "), ";
-        //out << it->data << "(" << it->ref_cnt << ")["<< it.getNode() << ", " << it->prev << ", " << it->next << "], ";
-    }
+
     return out;
 }

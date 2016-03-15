@@ -19,7 +19,6 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-
     tests.push_back(Test("push front", []{
         PriorityList list = {1, 2, 3, 4, 5};
         log_obj(list);
@@ -32,31 +31,34 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-
     //TODO: REWRITE TEST
     tests.push_back(Test("self sorting", []{
-        PriorityList list = {1, 2, 3, 4, 5};
-        log_obj(list.find(4));
-        log_obj(list);
-        assert(list.find(4) == 0);
-        log_obj(list.find(2));
-        log_obj(list);
-        log_obj(list.find(2));
-        log_obj(list);
-        assert(list.find(2) == 1);
-        log_obj(list);
-        assert(list.find(2) == 0);
-        return true;
+        return false;
     }));
 
 
-    tests.push_back(Test("add element", []{
+    tests.push_back(Test("-=/+= operators for items", []{
         PriorityList list;
         log_obj(list);
         eval(list += 111);
         eval(list += 123);
         eval(list += 111);
         log_obj(list);
+        assert(list.length() == 3);
+        eval(list -= 111);
+        log_obj(list);
+        assert(list.length() == 2);
+        return true;
+    }));
+
+    tests.push_back(Test("remove element - less used", []{
+        PriorityList list;
+        log_obj(list);
+        eval(list += 111);
+        eval(list += 123);
+        eval(list += 111);
+        log_obj(list);
+        eval(for(int i = 0; i < 10; ++i) list.find(111));
         assert(list.length() == 3);
         eval(list -= 111);
         log_obj(list);
@@ -128,6 +130,19 @@ int main(int argc, const char **argv)
         assert(list.length() == 7);
         return true;
     }));
+
+    tests.push_back(Test("remove duplicates - unique", []{
+        PriorityList list = {1, 1, 2, 3, 55, -11, 5, -11, 2, 1, 1, 3, 2, 11};
+        log_obj(list);
+        assert(list.length() == 14);
+        eval(PriorityList list2 = list.unique());
+        log_obj(list);
+        log_obj(list2);
+        assert(list.length() == 14);
+        assert(list2.length() == 7);
+        return true;
+    }));
+
 
     tests.push_back(Test("list sum", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
