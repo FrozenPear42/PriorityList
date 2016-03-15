@@ -6,13 +6,13 @@
 TARGET = PROI_1
 
 CXX = g++
-CXXFLAGS = -Wall -std=c++11
-
-LFLAGS = -Wall -std=c++11
 
 SRCDIR = src
 INCDIR = inc
 BINDIR = bin
+
+CXXFLAGS = -Wall -I$(INCDIR) -std=c++11
+LFLAGS = -Wall -std=c++11
 
 SOURCES  := $(wildcard $(SRCDIR)/*.cpp)
 INCLUDES := $(wildcard $(INCDIR)/*.hpp) $(wildcard $(INCDIR)/*.h)
@@ -25,7 +25,7 @@ $(TARGET): $(OBJECTS)
 
 $(OBJECTS): $(BINDIR)/%.o : $(SRCDIR)/%.cpp
 	@mkdir -p $(BINDIR)
-	@$(CXX) $(CXXFLAGS) -I$(INCDIR) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
 
 .PHONEY: clean
 clean:

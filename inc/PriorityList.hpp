@@ -22,7 +22,7 @@ class PriorityList {
       void pushBack(long pVal);
       void insert(long pVal, int pIdx);
 
-      void removeByIdx(int pIdx) throw(std::out_of_range);
+      void removeByIdx(int pIdx);
       void removeOneByValue(long pVal);
       void removeAllByValue(long pVal);
       void removeByRange(long pLVal,long pRVal);
@@ -33,8 +33,8 @@ class PriorityList {
       PriorityList& operator+=(const long pVal);
       PriorityList& operator-=(const long pVal);
 
-      long getByIdx(int pIdx) throw(std::out_of_range);
-      long& operator[](int pIdx) throw(std::out_of_range);
+      long getByIdx(int pIdx);
+      long& operator[](int pIdx);
       int find(long pVal);
       PriorityList::iterator itFind(long pVal);
 
@@ -83,20 +83,20 @@ class PriorityList {
           friend std::ostream& operator<<(std::ostream& out, PriorityList& pList);
       public:
           ListIterator(Node* pNode): node(pNode) {}
-          ListIterator& operator++() throw (std::out_of_range){
+          ListIterator& operator++() {
               if(node == nullptr)
               throw std::out_of_range("Iterator out of range");
               node = node->next;
               return *this;
           }
-          ListIterator& operator--() throw (std::out_of_range) {
+          ListIterator& operator--() {
               if(node == nullptr)
               throw std::out_of_range("Iterator out of range");
               node = node->prev;
               return *this;
           }
-          ListIterator operator++(int) throw (std::out_of_range) {ListIterator tmp(*this); operator++(); return tmp;}
-          ListIterator operator--(int) throw (std::out_of_range) {ListIterator tmp(*this); operator--(); return tmp;}
+          ListIterator operator++(int) {ListIterator tmp(*this); operator++(); return tmp;}
+          ListIterator operator--(int) {ListIterator tmp(*this); operator--(); return tmp;}
           bool operator==(const ListIterator& rhs) {return node == rhs.node;}
           bool operator!=(const ListIterator& rhs) {return node != rhs.node;}
           Type& operator*() const {return node->data;}

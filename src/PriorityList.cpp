@@ -65,13 +65,13 @@ PriorityList& PriorityList::operator-=(const long pVal) {
 
 /** returns value at specified index, than increments thats value
  reference counter and reorganise the list */
-long PriorityList::getByIdx(int pIdx) throw(std::out_of_range){
+long PriorityList::getByIdx(int pIdx){
     return operator[](pIdx);
 }
 
 /** returns value at specified index, than increments thats value
  reference counter and reorganise the list */
-long& PriorityList::operator[](int pIdx) throw(std::out_of_range) {
+long& PriorityList::operator[](int pIdx) {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
 
@@ -111,7 +111,7 @@ PriorityList::iterator PriorityList::itFind(long pVal) {
 }
 
 /** Removes value at specified index. If index out of range exception is thrown */
-void PriorityList::removeByIdx(int pIdx) throw(std::out_of_range) {
+void PriorityList::removeByIdx(int pIdx)  {
     if(pIdx < 0 || pIdx >= mSize)
         throw std::out_of_range("List index out of range");
     Node* node = mHead;
