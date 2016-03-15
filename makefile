@@ -3,7 +3,7 @@
 # Author: Wojciech Gruszka
 # Email:  wojciech@gruszka.eu
 # ---------------------------
-TARGET = PROI_1
+TARGET = PriorityList
 
 CXX = g++
 
@@ -11,8 +11,8 @@ SRCDIR = src
 INCDIR = inc
 BINDIR = bin
 
-CXXFLAGS = -Wall -I$(INCDIR) -std=c++11
-LFLAGS = -Wall -std=c++11
+CXXFLAGS = -Wall -I$(INCDIR) -std=c++11 -pedantic
+LFLAGS = -Wall -std=c++11 -pedantic
 
 SOURCES  := $(wildcard $(SRCDIR)/*.cpp)
 INCLUDES := $(wildcard $(INCDIR)/*.hpp) $(wildcard $(INCDIR)/*.h)

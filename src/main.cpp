@@ -179,7 +179,16 @@ int main(int argc, const char **argv)
     }));
 
     tests.push_back(Test("get", []{
-        return false;
+        PriorityList list = {2,1,0,-1,-2};
+        log_obj(list);
+        assert(list[0] == 2);
+        eval(list.pushFront(-11));
+        log_obj(list);
+        assert(list.getByIdx(0) == -11);
+        assert(list.find(1) != -1);
+        assert(list.find(100) == -1);
+        assert((*list.itFind(0)) == 0);
+        return true;
     }));
 
     tests.push_back(Test("self sorting", []{
@@ -290,7 +299,7 @@ int main(int argc, const char **argv)
         test.run();
 
     TEST_OUT << "\nSUMMARY: \n";
-    for(Test& test : tests){
+    for(Test& test : tests) {
         if(!test.success)
             TEST_OUT << COLOR_RED "Test: " << test.mName << " failed!\n" COLOR_RESET;
         else
