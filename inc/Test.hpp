@@ -23,30 +23,30 @@
 #define TEST_OUT std::cout
 #endif
 
-#define assert(expr) try{                                       \
-if(!(expr)) {                                                   \
-    TEST_OUT << FAIL_TAG #expr << "\n";                         \
-    return false;                                               \
-} else {                                                        \
-TEST_OUT << OK_TAG #expr << "\n";                               \
-}                                                               \
-}catch(std::exception& e){                                      \
-    TEST_OUT << FAIL_TAG #expr": " << e.what() << "\n";         \
-    return false;                                               \
-}catch(...){                                                    \
-    TEST_OUT << FAIL_TAG #expr ": Unknown exception!" << "\n";  \
-    return false;                                               \
+#define assert(expr) try{                                           \
+if(!(expr)) {                                                       \
+    TEST_OUT << FAIL_TAG #expr << "\n";                             \
+    return false;                                                   \
+} else {                                                            \
+TEST_OUT << OK_TAG #expr << "\n";                                   \
+}                                                                   \
+}catch(std::exception& e){                                          \
+    TEST_OUT << FAIL_TAG #expr": " << e.what() << "\n";             \
+    return false;                                                   \
+}catch(...){                                                        \
+    TEST_OUT << FAIL_TAG #expr ": Unknown exception!" << "\n";      \
+    return false;                                                   \
 }
 
-#define expect(expr) try{                                       \
-    expr;                                                       \
-    TEST_OUT << FAIL_TAG #expr": Expected exception!\n";        \
-    return false;                                               \
-}catch(std::exception& e) {                                     \
-    TEST_OUT << OK_TAG #expr << " Expected: " << e.what() << "\n";\
-}catch(...) {                                                   \
-    TEST_OUT << OK_TAG #expr << " Expected: exception" << "\n";  \
-}                                                               \
+#define expect(expr) try{                                           \
+    expr;                                                           \
+    TEST_OUT << FAIL_TAG #expr": Expected exception!\n";            \
+    return false;                                                   \
+}catch(std::exception& e) {                                         \
+    TEST_OUT << OK_TAG #expr << " Expected: " << e.what() << "\n";  \
+}catch(...) {                                                       \
+    TEST_OUT << OK_TAG #expr << " Expected: exception" << "\n";     \
+}                                                                   \
 
 
 #define eval(expr) expr; TEST_OUT << EVAL_TAG #expr "\n";

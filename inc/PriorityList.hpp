@@ -12,6 +12,7 @@ class PriorityList {
     class Node;
 public:
     template <class Type, class NType> class ListIterator;
+    
     typedef ListIterator<long, Node> iterator;
     typedef ListIterator<const long, const Node> constIterator;
 

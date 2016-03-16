@@ -13,7 +13,6 @@
 #include <unordered_set>
 #include "PriorityList.hpp"
 
-
 PriorityList::PriorityList(const PriorityList& pList) : PriorityList() {
     operator+=(pList);
 }

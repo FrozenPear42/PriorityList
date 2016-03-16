@@ -116,7 +116,7 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("remove all elements of certain value", []{
+    tests.push_back(Test("remove all elements by value", []{
         PriorityList list = {-111, 222, 33, 111, 111, 111,123};
         log_obj(list);
         eval(list.removeAllByValue(111));
@@ -144,7 +144,6 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    //TODO: Improve test
     tests.push_back(Test("remove duplicates", []{
         PriorityList list = {1, 1, 2, 3, 55, -11, 5, -11, 2, 1, 1, 3, 2, 11};
         log_obj(list);
@@ -187,13 +186,30 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("get", []{
+    tests.push_back(Test("get - operator[]", []{
         PriorityList list = {2,1,0,-1,-2};
         log_obj(list);
         assert(list[0] == 2);
         eval(list.pushFront(-11));
         log_obj(list);
+        assert(list[0] == -11);
+        assert(list[1] == 2);
+        return true;
+    }));
+
+    tests.push_back(Test("get - getByIdx", []{
+        PriorityList list = {2,1,0,-1,-2};
+        log_obj(list);
+        assert(list.getByIdx(0) == 2);
+        eval(list.pushFront(-11));
+        log_obj(list);
         assert(list.getByIdx(0) == -11);
+        assert(list.getByIdx(1) == 2);
+        return true;
+    }));
+
+    tests.push_back(Test("get - find", []{
+        PriorityList list = {2,1,0,-1,-2};
         assert(list.find(1) != -1);
         assert(list.find(100) == -1);
         assert((*list.itFind(0)) == 0);
@@ -241,6 +257,8 @@ int main(int argc, const char **argv)
         log_obj(list2);
         log_obj(list3);
         assert(list3.length() == 10);
+        eval(list3.removeByRange(1, 10));
+        assert(list3.length() == 0);
         return true;
     }));
 
@@ -270,6 +288,10 @@ int main(int argc, const char **argv)
         log_obj(list1);
         log_obj(list2);
         assert(list1 == list2);
+        eval(list1[0] = 100);
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
         return true;
     }));
 
@@ -286,7 +308,7 @@ int main(int argc, const char **argv)
     }));
 
     tests.push_back(Test("length", []{
-        PriorityList list = {-15555, 0, 1222};
+        PriorityList list = {-155, 0, 122};
         log_obj(list);
         assert(list.length() == 3);
         eval(list.pushBack(11));
@@ -301,31 +323,51 @@ int main(int argc, const char **argv)
         return true;
     }));
 
-    tests.push_back(Test("compare", []{
+    tests.push_back(Test("compare - 1", []{
         PriorityList list1 = {1, 2, 3, 4, 5};
         PriorityList list2 = {5, 4, 3, 2, 1};
         log_obj(list1);
         log_obj(list2);
         assert(list1 == list2);
-        eval(list1.pushFront(5));
-        log_obj(list1);
-        log_obj(list2);
-        assert(list1 != list2);
-        eval(list2.pushBack(5));
+        return true;
+    }));
+
+    tests.push_back(Test("compare - 2", []{
+        PriorityList list1 = {1, 2, 3, 4, 5, 5};
+        PriorityList list2 = {5, 4, 3, 2, 1};
         log_obj(list1);
         log_obj(list2);
         assert(list1 != list2);
         return true;
     }));
 
-    tests.push_back(Test("iterator overflow", []{
+    tests.push_back(Test("compare - 3 - different reference counters", []{
+        PriorityList list1 = {1, 2, 3, 4, 5};
+        PriorityList list2 = {1, 2, 3, 4, 5};
+        eval(list1.getByIdx(0));
+        log_obj(list1);
+        log_obj(list2);
+        assert(list1 != list2);
+        return true;
+    }));
+
+
+    tests.push_back(Test("iterator overflow ++", []{
         PriorityList list = {1};
         log_obj(list);
         eval(auto it = list.end());
         expect(it++);
-        eval(it = list.begin());
+        expect(++it);
+        return true;
+    }));
+
+    tests.push_back(Test("iterator overflow --", []{
+        PriorityList list = {1};
+        log_obj(list);
+        eval(auto it = list.begin());
         eval(it--);
         expect(it--);
+        expect(--it);
         return true;
     }));
 
