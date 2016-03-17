@@ -17,6 +17,7 @@ public:
     typedef ListIterator<const long, const Node> constIterator;
 
     PriorityList(): mHead(nullptr), mTail(nullptr), mSize(0) {}
+    ~PriorityList();
     PriorityList(const PriorityList& pList);
     PriorityList(std::initializer_list<long> pList);
     PriorityList& operator=(const PriorityList& rhs);

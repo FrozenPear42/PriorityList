@@ -13,6 +13,10 @@
 #include <unordered_set>
 #include "PriorityList.hpp"
 
+PriorityList::~PriorityList() {
+    removeAll();
+}
+
 PriorityList::PriorityList(const PriorityList& pList) : PriorityList() {
     operator+=(pList);
 }
@@ -24,9 +28,9 @@ PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
 
 /** Assigment operator overloaded for correct memory allocation */
 PriorityList& PriorityList::operator=(const PriorityList& rhs) {
-    if(rhs != *this) {    
-	removeAll();
-    operator+=(rhs);
+    if(rhs != *this) {
+    	removeAll();
+        operator+=(rhs);
     }
     return *this;
 }
