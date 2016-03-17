@@ -24,8 +24,10 @@ PriorityList::PriorityList(std::initializer_list<long> pList) : PriorityList() {
 
 /** Assigment operator overloaded for correct memory allocation */
 PriorityList& PriorityList::operator=(const PriorityList& rhs) {
-    removeAll();
+    if(rhs != *this) {    
+	removeAll();
     operator+=(rhs);
+    }
     return *this;
 }
 
